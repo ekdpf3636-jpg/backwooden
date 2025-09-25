@@ -2,7 +2,10 @@ package com.springboot.wooden.controller;
 
 
 import com.springboot.wooden.domain.Customer;
+import com.springboot.wooden.dto.CustomerRequestDto;
 import com.springboot.wooden.service.CustomerService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,20 +35,24 @@ public class CustomerController {
 
     // 등록 -> CustomerAddPage
     @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer) {
-        return service.register(customer);
+    public ResponseEntity<Customer> createCustomer(@RequestBody @Valid CustomerRequestDto dto) {
+        Customer saved = service.register(dto);
+        return ResponseEntity.ok(saved);
     }
 
     // 수정 -> CustomerModifyPage
     @PutMapping("/{id}")
-    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer customer) {
-        return service.update(id, customer);
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id,
+                                                   @Valid @RequestBody CustomerRequestDto dto) {
+        Customer updated = service.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     // 삭제 -> CustomerIndexPage
     @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 

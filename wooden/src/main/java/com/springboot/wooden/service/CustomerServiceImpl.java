@@ -1,6 +1,7 @@
 package com.springboot.wooden.service;
 
 import com.springboot.wooden.domain.Customer;
+import com.springboot.wooden.dto.CustomerRequestDto;
 import com.springboot.wooden.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,24 +30,33 @@ public class CustomerServiceImpl implements CustomerService {
         return repository.findByCompany(company);  // SELECT * FROM CUSTOMER_TBL WHERE cus_comp = ?
     }
 
+    // 판매 거래처 등록
     @Override
-    public Customer register(Customer customer) {
+    public Customer register(CustomerRequestDto dto) {
+        Customer customer = new Customer();
+        customer.setCompany(dto.getCompany());
+        customer.setManager(dto.getManager());
+        customer.setEmail(dto.getEmail());
+        customer.setPhone(dto.getPhone());
+        customer.setAddress(dto.getAddress());
+
         return repository.save(customer);
     }
 
-    // 판매거래처 등록
+    // 판매거래처 수정
     @Override
-    public Customer update(Long id, Customer customer) {
+    public Customer update(Long id, CustomerRequestDto dto) {
 
         // DB 에서 기존 고객 찾기
         Customer existing = repository.findById(id).
                 orElseThrow(() -> new RuntimeException("Customer not found"));
 
         // 기존 데이터에 새로운 값 덮어 쓰기
-        existing.setCompany(customer.getCompany());
-        existing.setManager(customer.getManager());
-        existing.setPhone(customer.getPhone());
-        existing.setAddress(customer.getAddress());
+        existing.setCompany(dto.getCompany());
+        existing.setManager(dto.getManager());
+        existing.setEmail(dto.getEmail());
+        existing.setPhone(dto.getPhone());
+        existing.setAddress(dto.getAddress());
 
         // 저장된 값이 있으면 UPDATE 실행
         return repository.save(existing);
