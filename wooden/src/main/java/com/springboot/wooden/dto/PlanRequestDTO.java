@@ -1,0 +1,24 @@
+package com.springboot.wooden.dto;
+
+import lombok.*;
+
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class PlanRequestDTO {
+
+    // plan_no 매핑
+
+    private Long planNo;
+    private String itemName;
+    private int planQty;
+    private String planState;
+    private LocalDate planStartDate;
+    private LocalDate planEndDate;
+
+    private Long itemNo;
+}
