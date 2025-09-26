@@ -1,66 +1,52 @@
 package com.springboot.wooden.service;
 
 import com.springboot.wooden.domain.Buyer;
-import com.springboot.wooden.dto.BuyerDTO;
+import com.springboot.wooden.dto.BuyerRequestDto;
+import com.springboot.wooden.dto.BuyerResponseDto;
 import com.springboot.wooden.repository.BuyerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BuyerServiceImpl implements BuyerService {
 
     private final BuyerRepository repo;
+    private final ModelMapper mapper;
 
     @Override
-    public BuyerDTO save(BuyerDTO dto) {
-        Buyer saved = repo.save(dto.toEntity());
-        return BuyerDTO.fromEntity(saved);
+    public BuyerResponseDto save(BuyerRequestDto dto) {
+        Buyer buyer = mapper.map(dto, Buyer.class);
+        Buyer saved = repo.save(buyer);
+        return mapper.map(saved, BuyerResponseDto.class);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<BuyerDTO> findAll() {
-        return repo.findAll(Sort.by(Sort.Direction.DESC, "buyerNo"))
-                .stream()
-                .map(BuyerDTO::fromEntity)
-                .collect(Collectors.toList());
+    public List<BuyerResponseDto> findAll() {
+        return repo.findAll().stream()
+                .map(buyer -> mapper.map(buyer, BuyerResponseDto.class))
+                .toList();
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public BuyerDTO findById(Long id) {
-        Buyer buyer = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("구매거래처가 존재하지 않습니다. ID=" + id));
-        return BuyerDTO.fromEntity(buyer);
+    public BuyerResponseDto findById(Long id) {
+        Buyer buyer = repo.findById(id).orElseThrow(); // 필요 시 커스텀 예외로 교체
+        return mapper.map(buyer, BuyerResponseDto.class);
     }
 
     @Override
-    public BuyerDTO update(Long id, BuyerDTO dto) {
-        Buyer b = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("수정 대상이 존재하지 않습니다. ID=" + id));
-
-        b.setBuyerComp(dto.getBuyerComp());
-        b.setBuyerName(dto.getBuyerName());
-        b.setBuyerEmail(dto.getBuyerEmail());
-        b.setBuyerPhone(dto.getBuyerPhone());
-        b.setBuyerAddr(dto.getBuyerAddr());
-
-        return BuyerDTO.fromEntity(repo.save(b));
+    public BuyerResponseDto update(Long id, BuyerRequestDto dto) {
+        Buyer buyer = repo.findById(id).orElseThrow();
+        mapper.map(dto, buyer); // PK 유지하며 값만 덮어쓰기
+        Buyer saved = repo.save(buyer);
+        return mapper.map(saved, BuyerResponseDto.class);
     }
 
     @Override
     public void delete(Long id) {
-        if (!repo.existsById(id)) {
-            throw new NoSuchElementException("삭제할 구매거래처가 존재하지 않습니다. ID=" + id);
-        }
         repo.deleteById(id);
     }
 }
