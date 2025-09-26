@@ -2,8 +2,6 @@ package com.springboot.wooden.dto;
 
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +13,7 @@ public class PartResponseDto {
     private String partCode;
     private String partName;
     private String partSpec;
-    private BigDecimal partPrice;
+    private int partPrice;
 
     private String buyerComp;  // 구매처명 (응답 전용)
 }

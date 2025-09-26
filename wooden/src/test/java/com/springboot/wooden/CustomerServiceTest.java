@@ -1,19 +1,25 @@
 package com.springboot.wooden;
 
+import com.springboot.wooden.controller.CustomerController;
 import com.springboot.wooden.domain.Customer;
-import com.springboot.wooden.dto.CustomerRequestDto;
 import com.springboot.wooden.repository.CustomerRepository;
+import com.springboot.wooden.service.CustomerService;
 import com.springboot.wooden.service.CustomerServiceImpl;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.mockito.ArgumentCaptor;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +27,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
@@ -32,11 +41,10 @@ public class CustomerServiceTest {
     private CustomerServiceImpl service; // MockService를 주입받은 Controller
 
     private Customer customer;
-    private CustomerRequestDto dto;
 
     @BeforeEach
     void setUp() {
-        // 테스트 데이터 엔티티
+        // 테스트 데이터
         customer = new Customer();
         customer.setId(1L);
         customer.setCompany("성남공장");
@@ -44,16 +52,7 @@ public class CustomerServiceTest {
         customer.setEmail("test@naver.com");
         customer.setPhone("01012341234");
         customer.setAddress("경기도 우리집");
-
-        //  테스트 데이터 (DTO)
-        dto = new CustomerRequestDto();
-        dto.setCompany("성남공장");
-        dto.setManager("요미");
-        dto.setEmail("test@naver.com");
-        dto.setPhone("01012341234");
-        dto.setAddress("경기도 우리집");
     }
-
 
     @Test
     void all_customer() {       // 전체 조회
@@ -85,25 +84,11 @@ public class CustomerServiceTest {
         // given
         when(repository.save(any(Customer.class))).thenReturn(customer);
         // when
-        Customer saved = service.register(dto);
+        Customer saved = service.register(customer);
         // then
-        // 1. 호출 여부만 확인
-        verify(repository, times(1)).save(any(Customer.class));
-
-        // 2. 실제 저장된 값까지 확인 (ArgumentCaptor)
-        ArgumentCaptor<Customer> captor = ArgumentCaptor.forClass(Customer.class);
-        verify(repository).save(captor.capture());   // 저장된 객체 캡처
-        Customer captured = captor.getValue();
-
-        assertThat(captured.getCompany()).isEqualTo("성남공장");
-        assertThat(captured.getManager()).isEqualTo("요미");
-        assertThat(captured.getEmail()).isEqualTo("test@naver.com");
-        assertThat(captured.getPhone()).isEqualTo("01012341234");
-        assertThat(captured.getAddress()).isEqualTo("경기도 우리집");
-
-        // service.register() 리턴값도 확인
         assertThat(saved).isNotNull();
         assertThat(saved.getCompany()).isEqualTo("성남공장");
+        verify(repository, times(1)).save(customer);
     }
 
     @Test
@@ -113,22 +98,12 @@ public class CustomerServiceTest {
         when(repository.save(any(Customer.class))).thenReturn(customer);
 
         // when
-        dto.setManager("박요미");
-        Customer updated = service.update(1L, dto);
+        customer.setManager("박요미");
+        Customer updated = service.update(1L, customer);
 
         // then
-        // 1. 호출 여부만 확인
-        verify(repository, times(1)).save(any(Customer.class));
-
-        // 2. 실제 저장된 값까지 확인
-        ArgumentCaptor<Customer> captor = ArgumentCaptor.forClass(Customer.class);
-        verify(repository).save(captor.capture());
-        Customer captured = captor.getValue();
-
-        assertThat(captured.getManager()).isEqualTo("박요미");
-
-        // 리턴값 확인
         assertThat(updated.getManager()).isEqualTo("박요미");
+        verify(repository, times(1)).save(customer);
     }
 
     @Test

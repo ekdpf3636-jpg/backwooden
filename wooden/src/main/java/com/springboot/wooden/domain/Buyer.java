@@ -1,32 +1,36 @@
-// src/main/java/com/springboot/wooden/domain/Buyer.java
 package com.springboot.wooden.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "BUYER_TBL")
-@Getter @Setter
+@Getter
 public class Buyer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-  //  @Column(name = "buyer_no")
+    @Column(name = "buyer_no")
     private Long buyerNo; // PK: AUTO_INCREMENT
 
     @Column(name = "buyer_comp", nullable = false, length = 20)
-    private String buyerComp;   // 구매처명
+    private String buyerComp;
 
     @Column(name = "buyer_name", nullable = false, length = 10)
-    private String buyerName;   // 담당자
+    private String buyerName;
 
     @Column(name = "buyer_email", nullable = false, length = 40)
-    private String buyerEmail;  // 이메일
+    private String buyerEmail;
 
     @Column(name = "buyer_phone", nullable = false, length = 11)
-    private String buyerPhone;  // 전화(숫자만 10~11자리)
+    private String buyerPhone;
 
     @Column(name = "buyer_addr", nullable = false, length = 50)
-    private String buyerAddr;   // 주소
+    private String buyerAddr;
+
+    public void changeBuyerComp(String buyerComp)   { this.buyerComp = buyerComp; }
+    public void changeBuyerName(String buyerName)   { this.buyerName = buyerName; }
+    public void changeBuyerEmail(String buyerEmail) { this.buyerEmail = buyerEmail; }
+    public void changeBuyerPhone(String buyerPhone) { this.buyerPhone = buyerPhone; }
+    public void changeBuyerAddr(String buyerAddr)   { this.buyerAddr = buyerAddr; }
 }

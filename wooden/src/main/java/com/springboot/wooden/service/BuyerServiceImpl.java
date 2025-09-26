@@ -19,7 +19,13 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public BuyerResponseDto save(BuyerRequestDto dto) {
-        Buyer buyer = mapper.map(dto, Buyer.class);
+        Buyer buyer = new Buyer();
+        buyer.changeBuyerComp(dto.getBuyerComp());
+        buyer.changeBuyerName(dto.getBuyerName());
+        buyer.changeBuyerEmail(dto.getBuyerEmail());
+        buyer.changeBuyerPhone(dto.getBuyerPhone());
+        buyer.changeBuyerAddr(dto.getBuyerAddr());
+
         Buyer saved = repo.save(buyer);
         return mapper.map(saved, BuyerResponseDto.class);
     }
@@ -37,12 +43,17 @@ public class BuyerServiceImpl implements BuyerService {
         return mapper.map(buyer, BuyerResponseDto.class);
     }
 
-    @Override
     public BuyerResponseDto update(Long id, BuyerRequestDto dto) {
         Buyer buyer = repo.findById(id).orElseThrow();
-        mapper.map(dto, buyer); // PK 유지하며 값만 덮어쓰기
-        Buyer saved = repo.save(buyer);
-        return mapper.map(saved, BuyerResponseDto.class);
+
+        // 부분 수정: null이면 건너뛰기
+        if (dto.getBuyerComp()  != null) buyer.changeBuyerComp(dto.getBuyerComp());
+        if (dto.getBuyerName()  != null) buyer.changeBuyerName(dto.getBuyerName());
+        if (dto.getBuyerEmail() != null) buyer.changeBuyerEmail(dto.getBuyerEmail());
+        if (dto.getBuyerPhone() != null) buyer.changeBuyerPhone(dto.getBuyerPhone());
+        if (dto.getBuyerAddr()  != null) buyer.changeBuyerAddr(dto.getBuyerAddr());
+
+        return mapper.map(buyer, BuyerResponseDto.class);
     }
 
     @Override

@@ -9,15 +9,8 @@ import lombok.Setter;
 @Setter
 public class ItemRequestDto {
 
-    @NotBlank(message = "상품코드는 필수입니다")
-    private String code;
-
-    @NotBlank(message = "상품명은 필수입니다")
-    private String name;
-
-    @NotBlank(message = "상품규격은 필수입니다")
-    private String spec;
-
-    @NotNull(message = "상품단가는 필수입니다")
-    private int price;
+    private String itemCode;
+    private String itemName;
+    private String itemSpec;
+    private int itemPrice;
 }

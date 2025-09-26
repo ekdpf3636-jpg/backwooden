@@ -10,8 +10,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     // JpaRepository에 의해 findById, findAll, save 등 기본 메소드 제공
 
     // 상품명으로 조회
-    Optional<Item> findByName(String name);
+    Optional<Item> findByItemName(String ItemName);
 
     // 같은 이름이 여러 개일 수 있으니 리스트로 받을 수도 있음
-    List<Item> findAllByName(String name);
+    List<Item> findAllByItemName(String ItemName);
 }

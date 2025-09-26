@@ -3,8 +3,6 @@ package com.springboot.wooden.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "PART_TBL")
 @Getter
@@ -38,8 +36,8 @@ public class Part {
     @Column(name = "part_spec", nullable = false, length = 40)
     private String partSpec;
 
-    @Column(name = "part_price", nullable = false, precision = 12, scale = 2)
-    private BigDecimal partPrice;
+    @Column(name = "part_price", nullable = false)
+    private int partPrice;
 
     // --- 변경 메서드 ---
     public void changeBuyer(Buyer buyer) { this.buyer = buyer; }
