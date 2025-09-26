@@ -28,7 +28,7 @@ public class PartServiceImpl implements PartService {
     @Override
     @Transactional(readOnly = true)
     public List<PartResponseDto> getAllParts() {
-        // 최신 등록 순 정렬 (엔티티 필드명이 partNo라면 "partNo" 사용)
+
         List<Part> parts = partRepository.findAll(Sort.by(Sort.Direction.DESC, "partNo"));
 
         return parts.stream()

@@ -1,20 +1,20 @@
 package com.springboot.wooden.service;
 
-import com.springboot.wooden.domain.Customer;
+import com.springboot.wooden.dto.CustomerRequestDto;
+import com.springboot.wooden.dto.CustomerResponseDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CustomerService {
 
-    List<Customer> getAll();                // 전체 조회
+    List<CustomerResponseDto> getAll();
 
-    Optional<Customer> getByCompany(String company); // 판매처명으로 조회
+    Optional<CustomerResponseDto> getByCompany(String company);
 
-    Customer register(Customer customer);            // 등록 + 수정
+    CustomerResponseDto register(CustomerRequestDto dto);
 
-    Customer update(Long id, Customer customer);     // 업데이트
+    CustomerResponseDto update(Long id, CustomerRequestDto dto);
 
-    void delete(Long id);         // 삭제
-
+    void delete(Long id);
 }
