@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 
 public class PartRequestDto {
-
+    private Long partNo;
     private String partCode;
     private String partName;
     private String partSpec;

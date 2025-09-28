@@ -1,11 +1,17 @@
 package com.springboot.wooden.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "BUYER_TBL")
+@Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Buyer {
 
     @Id

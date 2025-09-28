@@ -4,51 +4,44 @@ import com.springboot.wooden.dto.CustomerRequestDto;
 import com.springboot.wooden.dto.CustomerResponseDto;
 import com.springboot.wooden.service.CustomerService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customer") // 공통 API
+@RequestMapping("/api/order/sellercustomer") // 공통 API
+@RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerService service;
 
-    public CustomerController(CustomerService service) {
-        this.service = service;
-    }
     // 목록 조회
     @GetMapping
     public List<CustomerResponseDto> getAllCustomers() {
         return service.getAll();
     }
 
-    // 단건 조회
-    @GetMapping("/company/{company}")
-    public CustomerResponseDto getCustomer(@PathVariable String company) {
-        return service.getByCompany(company).
-                orElseThrow(() -> new RuntimeException("Customer not found with company : " + company));
-    }
-
-    // 등록 -> CustomerAddPage
     @PostMapping
     public ResponseEntity<CustomerResponseDto> createCustomer(@RequestBody @Valid CustomerRequestDto dto) {
         CustomerResponseDto saved = service.register(dto);
         return ResponseEntity.ok(saved);
     }
 
-    // 수정 -> CustomerModifyPage
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDto> updateCustomer(@PathVariable Long id,
-                                                              @Valid @RequestBody CustomerRequestDto dto) {
+    // 수정
+    @PutMapping
+    public ResponseEntity<CustomerResponseDto> update(@Valid @RequestBody CustomerRequestDto dto) {
+        Long id = dto.getCusNo();
         CustomerResponseDto updated = service.update(id, dto);
         return ResponseEntity.ok(updated);
     }
 
-    // 삭제 -> CustomerIndexPage
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+    // 삭제
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@RequestBody CustomerRequestDto dto) {
+        Long id = dto.getCusNo();
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

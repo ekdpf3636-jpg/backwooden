@@ -10,13 +10,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class PlanResponseDTO {
-
     private Long planNo;    // PK (조회 시만)
+    private String itemName;
     private int planQty;
     private String planState;
     private LocalDate planStartDate;
     private LocalDate planEndDate;
-
-    private String itemName;
-
 }

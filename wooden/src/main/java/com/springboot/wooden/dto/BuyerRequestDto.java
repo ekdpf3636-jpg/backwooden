@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class BuyerRequestDto {
 
+    private Long buyerNo;
     private String buyerComp;
     private String buyerName;
     private String buyerEmail;

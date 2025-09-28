@@ -12,13 +12,11 @@ import java.time.LocalDate;
 public class PlanRequestDTO {
 
     // plan_no 매핑
-
     private Long planNo;
     private String itemName;
     private int planQty;
     private String planState;
     private LocalDate planStartDate;
     private LocalDate planEndDate;
-
     private Long itemNo;
 }

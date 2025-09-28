@@ -20,5 +20,10 @@ public class OrderResponseDto {
     private String orderDeliState;
     private LocalDate orderDate;
     private String cusAddr;
+
+
+    public int getTotalPrice(){
+        return orderQty * orderPrice;
+    }
 }
 

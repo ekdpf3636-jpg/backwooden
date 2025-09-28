@@ -1,22 +1,28 @@
 package com.springboot.wooden.service;
 
-
+import com.springboot.wooden.domain.Part;
 import com.springboot.wooden.dto.PartRequestDto;
 import com.springboot.wooden.dto.PartResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PartService {
 
-    Long addPart(PartRequestDto dto);           // 등록
+    // 등록
+    PartResponseDto save(PartRequestDto dto);
 
-    PartResponseDto getOne(Long partNo);        // 단건 조회 (구매처명 포함)
+    // 수정
+    PartResponseDto update(Long partNo, PartRequestDto dto);
 
-    PartResponseDto getByBuyerNo(Long buyerNo); // 구매처 기준 조회
+    // 삭제
+    void delete(Long partNo);
 
-    void updatePart(Long partNo, PartRequestDto dto); // 수정
+    // 조회
+    PartResponseDto getOne(Long partNo);
+    List<PartResponseDto> getAll();
 
-    void deletePart(Long partNo);               // 삭제
+    // (선택) Buyer 기준 조회: 1:1이면 유용
+    PartResponseDto getByBuyerNo(Long buyerNo);
 
-    List<PartResponseDto> getAllParts();
 }

@@ -1,6 +1,9 @@
 package com.springboot.wooden.service;
 
+import com.springboot.wooden.domain.Buyer;
 import com.springboot.wooden.domain.Item;
+import com.springboot.wooden.dto.BuyerRequestDto;
+import com.springboot.wooden.dto.BuyerResponseDto;
 import com.springboot.wooden.dto.ItemRequestDto;
 import com.springboot.wooden.dto.ItemResponseDto;
 import com.springboot.wooden.repository.ItemRepository;
@@ -27,6 +30,19 @@ public class ItemServiceImpl implements ItemService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public ItemResponseDto save(ItemRequestDto dto) {
+        Item item = Item.builder()
+                .itemCode(dto.getItemCode())
+                .itemName(dto.getItemName())
+                .itemSpec(dto.getItemSpec())
+                .itemPrice(dto.getItemPrice())
+                .build();
+
+        Item saved = repository.save(item);
+        return modelMapper.map(saved, ItemResponseDto.class);
+    }
     @Override
     public Optional<ItemResponseDto> getByName(String name) {
         return repository.findByItemName(name)

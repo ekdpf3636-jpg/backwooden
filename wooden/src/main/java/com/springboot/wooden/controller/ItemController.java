@@ -1,50 +1,46 @@
 package com.springboot.wooden.controller;
 
+import com.springboot.wooden.dto.BuyerResponseDto;
 import com.springboot.wooden.dto.ItemRequestDto;
 import com.springboot.wooden.dto.ItemResponseDto;
 import com.springboot.wooden.service.ItemService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/item")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/plan/itemlist")
+@RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService service;
-
-    public ItemController(ItemService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public List<ItemResponseDto> getAllItems() {
         return service.getAll();
     }
 
-    // 상품명으로 단건 조회
-    @GetMapping("/name/{name}")
-    public ItemResponseDto getItem(@PathVariable String name) {
-        return service.getByName(name)
-                .orElseThrow(() -> new RuntimeException("Item not found with itemName: " + name));
-    }
-
+    // 추가
     @PostMapping
     public ResponseEntity<ItemResponseDto> createItem(@RequestBody @Valid ItemRequestDto dto) {
-        return ResponseEntity.ok(service.register(dto));
+        ItemResponseDto saved = service.save(dto);
+        return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long id,
-                                                      @Valid @RequestBody ItemRequestDto dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+    // 수정
+    @PutMapping
+    public ResponseEntity<ItemResponseDto> update(@Valid @RequestBody ItemRequestDto dto) {
+        Long id = dto.getItemNo();
+        ItemResponseDto updated = service.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ItemResponseDto> deleteItem(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<ItemResponseDto> delete(@RequestBody ItemRequestDto dto) {
+        Long id = dto.getItemNo();
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

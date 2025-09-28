@@ -4,9 +4,9 @@ package com.springboot.wooden.controller;
 import com.springboot.wooden.dto.BuyerRequestDto;
 import com.springboot.wooden.dto.BuyerResponseDto;
 import com.springboot.wooden.service.BuyerService;
-import com.springboot.wooden.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,32 +16,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BuyerController {
 
-    private final BuyerService service;
+    private final BuyerService buyerService;
 
+    // 목록 조회
     @GetMapping
-    public ApiResponse<List<BuyerResponseDto>> list() {
-        return ApiResponse.ok(service.findAll());
+    public List<BuyerResponseDto> list() {
+        return buyerService.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<BuyerResponseDto> get(@PathVariable Long id) {
-        return ApiResponse.ok(service.findById(id));
+    // 추가
+    @PostMapping
+    public ResponseEntity<BuyerResponseDto> createBuyer(@RequestBody @Valid BuyerRequestDto dto) {
+        BuyerResponseDto saved = buyerService.save(dto);
+        return ResponseEntity.ok(saved);
     }
 
-    @PostMapping("/add")
-    public ApiResponse<BuyerResponseDto> add(@RequestBody @Valid BuyerRequestDto dto) {
-        return ApiResponse.ok(service.save(dto));
+    // 수정
+    @PutMapping
+    public ResponseEntity<BuyerResponseDto> update(@RequestBody @Valid BuyerRequestDto dto) {
+        Long id = dto.getBuyerNo();
+        BuyerResponseDto updated = buyerService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
-    @PutMapping("/modify/{id}")
-    public ApiResponse<BuyerResponseDto> modify(@PathVariable Long id,
-                                                @RequestBody @Valid BuyerRequestDto dto) {
-        return ApiResponse.ok(service.update(id, dto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return ApiResponse.ok(null);
+    // 삭제
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@RequestBody BuyerRequestDto dto) {
+        Long id = dto.getBuyerNo();
+        buyerService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

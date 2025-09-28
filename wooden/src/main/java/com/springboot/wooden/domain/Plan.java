@@ -19,38 +19,36 @@ public class Plan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "plan_no")
+    @Column(name = "plan_no")
     private Long planNo;
 
-    // Item과 1:1 매핑 (FK: item_no)
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(
-            name = "item_no",            // PLAN_TBL에 FK 컬럼 생성
-            referencedColumnName = "item_no",
-            nullable = false,
-            unique = true                // 1:1 보장
-    )
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "item_no", referencedColumnName = "item_no", nullable = false)
     private Item item;
 
     @Column(name = "plan_qty", nullable = false)
     private int planQty;
-    @Column (name = "plan_state", nullable = false)
+    @Column(name = "plan_state", nullable = false)
     private String planState; // boolean or string 둘중 하나 선택
-    @Column (name = "plan_start_date", nullable = false)
+    @Column(name = "plan_start_date", nullable = false)
     private LocalDate planStartDate;
-    @Column (name = "plan_end_date", nullable = false)
+    @Column(name = "plan_end_date", nullable = false)
     private LocalDate planEndDate;
+
+    public void changeItem(Item item) { this.item = item; }
+
+    public void changePlanQty(int planQty) { this.planQty = planQty; }
 
     public void changePlanState(String planState) {
         this.planState = planState;
     }
 
     public void changePlanStartDate(LocalDate planStartDate) {
-            this.planStartDate = planStartDate;
+        this.planStartDate = planStartDate;
     }
 
     public void changePlanEndDate(LocalDate planEndDate) {
-            this.planEndDate = planEndDate;
+        this.planEndDate = planEndDate;
     }
 
 

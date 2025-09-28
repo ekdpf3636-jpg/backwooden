@@ -3,6 +3,7 @@ package com.springboot.wooden.controller;
 import com.springboot.wooden.dto.PartRequestDto;
 import com.springboot.wooden.dto.PartResponseDto;
 import com.springboot.wooden.service.PartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/part")
+@RequestMapping("/api/buyer/partlist")
 @RequiredArgsConstructor
 public class PartController {
 
@@ -18,39 +19,36 @@ public class PartController {
 
     // 목록 조회
     @GetMapping
-    public ResponseEntity<List<PartResponseDto>> getAll() {
-        return ResponseEntity.ok(partService.getAllParts());
+    public List<PartResponseDto> getAll() {
+        return partService.getAll();
     }
 
     // 등록
     @PostMapping
-    public ResponseEntity<Long> add(@RequestBody PartRequestDto dto) {
-        return ResponseEntity.ok(partService.addPart(dto));
+    public ResponseEntity<PartResponseDto> add(@RequestBody @Valid PartRequestDto dto) {
+        PartResponseDto saved = partService.save(dto);
+        return ResponseEntity.ok(saved);
     }
 
-    // 단건 조회
-    @GetMapping("/{partNo}")
-    public ResponseEntity<PartResponseDto> getOne(@PathVariable Long partNo) {
-        return ResponseEntity.ok(partService.getOne(partNo));
-    }
-
-    // 구매처 기준 조회 (Add폼 자동 채움용)
-    @GetMapping("/buyer/{buyerNo}")
-    public ResponseEntity<PartResponseDto> getByBuyer(@PathVariable Long buyerNo) {
-        return ResponseEntity.ok(partService.getByBuyerNo(buyerNo));
-    }
+//    // 구매처 기준 조회 (Add폼 자동 채움용)
+//    @GetMapping
+//    public ResponseEntity<PartResponseDto> getByBuyer(@PathVariable Long buyerNo) {
+//        return ResponseEntity.ok(partService.getByBuyerNo(buyerNo));
+//    }
 
     // 수정
-    @PutMapping("/{partNo}")
-    public ResponseEntity<Void> update(@PathVariable Long partNo, @RequestBody PartRequestDto dto) {
-        partService.updatePart(partNo, dto);
-        return ResponseEntity.noContent().build();
+    @PutMapping
+    public ResponseEntity<PartResponseDto> update(@RequestBody @Valid PartRequestDto dto) {
+        Long id = dto.getPartNo();
+        PartResponseDto updated = partService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     // 삭제
-    @DeleteMapping("/{partNo}")
-    public ResponseEntity<Void> delete(@PathVariable Long partNo) {
-        partService.deletePart(partNo);
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@RequestBody PartRequestDto dto) {
+        Long id = dto.getPartNo();
+        partService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

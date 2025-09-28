@@ -19,16 +19,18 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Override
     public BuyerResponseDto save(BuyerRequestDto dto) {
-        Buyer buyer = new Buyer();
-        buyer.changeBuyerComp(dto.getBuyerComp());
-        buyer.changeBuyerName(dto.getBuyerName());
-        buyer.changeBuyerEmail(dto.getBuyerEmail());
-        buyer.changeBuyerPhone(dto.getBuyerPhone());
-        buyer.changeBuyerAddr(dto.getBuyerAddr());
+        Buyer buyer = Buyer.builder()
+                .buyerComp(dto.getBuyerComp())
+                .buyerName(dto.getBuyerName())
+                .buyerEmail(dto.getBuyerEmail())
+                .buyerPhone(dto.getBuyerPhone())
+                .buyerAddr(dto.getBuyerAddr())
+                .build();
 
         Buyer saved = repo.save(buyer);
         return mapper.map(saved, BuyerResponseDto.class);
     }
+
 
     @Override
     public List<BuyerResponseDto> findAll() {
