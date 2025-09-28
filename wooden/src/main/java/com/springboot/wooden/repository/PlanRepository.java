@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, Long> {
-    Plan findByItemName(String itemName);
-    List<Plan> findByPlanState(String planState);
+
 }

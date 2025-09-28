@@ -40,5 +40,24 @@ public class Part {
     private int partPrice;
 
     // --- 변경 메서드 ---
-    public void changeBuyer(Buyer buyer) { this.buyer = buyer; }
+    public void changeBuyer(Buyer buyer) {
+        this.buyer = buyer;
+    }
+
+    public void changePartCode(String partCode) {
+        this.partCode = partCode;
+    }
+
+    public void changePartName(String partName) {
+        this.partName = partName;
+    }
+
+    public void changePartSpec(String partSpec) {
+        this.partSpec = partSpec;
+    }
+
+    public void changePartPrice(int partPrice) {
+        this.partPrice = partPrice;
+    }
+
 }

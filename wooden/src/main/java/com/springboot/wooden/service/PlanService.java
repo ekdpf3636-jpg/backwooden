@@ -1,14 +1,15 @@
 package com.springboot.wooden.service;
 
 import com.springboot.wooden.dto.PlanRequestDTO;
+import com.springboot.wooden.dto.PlanResponseDTO;
 
 import java.util.List;
 
 
 public interface PlanService {
 
-    Long addPlan(PlanRequestDTO planDTO);  // DTO를 받아서 저장
-    PlanRequestDTO get(Long tno);          // DTO 반환
-    List<PlanRequestDTO> getAll();
-    void modify(PlanRequestDTO planDTO);   //
+    List<PlanResponseDTO> getAll();
+    PlanResponseDTO save(PlanRequestDTO dto);
+    PlanResponseDTO update(Long planNo, PlanRequestDTO dto);
+    void delete(Long planNo); //
 }

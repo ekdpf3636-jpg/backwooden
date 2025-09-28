@@ -36,13 +36,13 @@ public class OrderServiceImpl implements OrderService {
     // 판매처명으로 조회
     @Override
     public Optional<OrderResponseDto> getByCompany(String company) {
-        return orderRepository.findByCustomer_Company(company) // Customer 엔티티 내부의 company 필드 기준
+        return orderRepository.findByCustomer_CusComp(company) // Customer 엔티티 내부의 company 필드 기준
                 .map(order -> modelMapper.map(order, OrderResponseDto.class));
     }
 
     // 등록
     @Override
-    public OrderResponseDto register(OrderRequestDto dto) {
+    public OrderResponseDto save(OrderRequestDto dto) {
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("고객 없음: " + dto.getCustomerId()));
         Item item = itemRepository.findById(dto.getItemId())
@@ -81,7 +81,11 @@ public class OrderServiceImpl implements OrderService {
         existing.changeOrderState(dto.getOrderState());
         existing.changeOrderDeliState(dto.getOrderDeliState());
         existing.changeOrderDate(dto.getOrderDate());
-        existing.changeCusAddr(dto.getCusAddr());
+        String addr = dto.getCusAddr();
+        if (addr == null || addr.isBlank()) {
+            addr = customer.getCusAddr(); // 고객 주소를 기본값으로
+        }
+        existing.changeCusAddr(addr);
 
         Order updated = orderRepository.save(existing);
         return modelMapper.map(updated, OrderResponseDto.class);

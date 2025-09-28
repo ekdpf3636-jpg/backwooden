@@ -10,6 +10,7 @@ public interface BuyerService {
     BuyerResponseDto save(BuyerRequestDto requestDto);
     List<BuyerResponseDto> findAll();
     BuyerResponseDto findById(Long id);
+
     BuyerResponseDto update(Long id, BuyerRequestDto requestDto);
     void delete(Long id);
 

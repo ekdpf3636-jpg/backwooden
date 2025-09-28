@@ -3,50 +3,48 @@ package com.springboot.wooden.controller;
 import com.springboot.wooden.dto.OrderRequestDto;
 import com.springboot.wooden.dto.OrderResponseDto;
 import com.springboot.wooden.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serial;
+import java.security.Provider;
 import java.util.List;
 
 @RestController // REST API 컨트롤러 (JSON 반환)
-@RequestMapping("/api/order")
+@RequestMapping("/api/order/orderlist")
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderService service;
 
     // 전체 주문 조회
     @GetMapping
     public List<OrderResponseDto> getOrders() {
-        return orderService.getAllOrders();
-    }
-
-    // 주문 단건 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderResponseDto> getByCompany(@PathVariable String company) {
-        return orderService.getByCompany(company)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return service.getAllOrders();
     }
 
     // 주문 등록
     @PostMapping
-    public OrderResponseDto addOrder(@RequestBody OrderRequestDto dto) {
-        return orderService.register(dto); // saveOrder → register
+    public ResponseEntity<OrderResponseDto> addOrder(@RequestBody @Valid OrderRequestDto dto) {
+        OrderResponseDto saved = service.save(dto);
+        return ResponseEntity.ok(saved);
     }
 
     // 주문 수정
-    @PutMapping("/{orderNo}")
-    public OrderResponseDto updateOrder(
-            @PathVariable Long orderNo,
-            @RequestBody OrderRequestDto dto) {
-        return orderService.update(orderNo, dto);
+    @PutMapping
+    public ResponseEntity<OrderResponseDto> update(@RequestBody @Valid OrderRequestDto dto){
+        Long id = dto.getOrderNo();
+        OrderResponseDto updated = service.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     // 주문 삭제
-    @DeleteMapping("/{orderNo}")
-    public void deleteOrder(@PathVariable Long orderNo) {
-        orderService.delete(orderNo);
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@RequestBody OrderRequestDto dto){
+        Long id = dto.getOrderNo();
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
